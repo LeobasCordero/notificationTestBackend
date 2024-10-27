@@ -15,4 +15,6 @@ public interface MessageRepository extends JpaRepository<Message, Integer> {
             "LEFT JOIN FETCH m.channel " +
             "ORDER BY m.sentAt DESC")
     List<Message> findAllMessagesOrderByDateDesc();
+
+
 }

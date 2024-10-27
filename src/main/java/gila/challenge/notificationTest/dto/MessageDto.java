@@ -18,4 +18,8 @@ public class MessageDto {
     private String channelName;
     private String content;
     private LocalDateTime sentAt;
+
+    private Integer userId;
+    private Integer categoryId;
+    private Integer channelId;
 }

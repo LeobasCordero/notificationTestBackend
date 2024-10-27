@@ -1,6 +1,7 @@
 package gila.challenge.notificationTest.service;
 
 import gila.challenge.notificationTest.dto.UserDto;
+import gila.challenge.notificationTest.model.User;
 import gila.challenge.notificationTest.repository.UserRepository;
 import gila.challenge.notificationTest.utilities.mappers.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,5 +19,10 @@ public class UserService {
         var userList = userRepository.findAll();
 
         return userList.stream().map(UserMapper::userModelToUserDto).toList();
+    }
+
+    public User getUserById(Integer id){
+        return userRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
     }
 }
