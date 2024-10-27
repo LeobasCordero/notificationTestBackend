@@ -15,21 +15,31 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
-    private Long userId;
+    private Integer userId;
 
-    @Column(name = "name", nullable = false)
+    @Column(name = "name", nullable = false, length = 100)
     private String userName;
 
-    @Column(name = "email")//TODO: add pattern validation
+    @Column(name = "email", length = 50) //TODO: add pattern validation
     private String email;
 
-    @Column(name = "phone_number") //TODO: add pattern validation
+    @Column(name = "phone_number", length = 20) //TODO: add pattern validation
     private String phoneNumber;
-/*
-    @ManyToMany(mappedBy = "users")
+
+    @ManyToMany
+    @JoinTable(
+            name = "user_category",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "category_id")
+    )
     private List<Category> categories;
 
-    @ManyToMany(mappedBy = "users")
+    @ManyToMany
+    @JoinTable(
+            name = "user_channel",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "channel_id")
+    )
     private List<Channel> channels;
-*/
+
 }
