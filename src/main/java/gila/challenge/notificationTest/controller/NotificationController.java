@@ -3,11 +3,11 @@ package gila.challenge.notificationTest.controller;
 import gila.challenge.notificationTest.api.NotificationApi;
 import gila.challenge.notificationTest.dto.NotificationDto;
 import gila.challenge.notificationTest.service.NotificationService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 @RestController
 @RequestMapping("/api/notification")
