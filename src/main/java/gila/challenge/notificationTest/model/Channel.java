@@ -21,6 +21,9 @@ public class Channel {
     @Column(name = "name", length = 50, nullable = false)
     private String name;
 
+    @Column(name = "display_name", length = 50, nullable = false)
+    private String displayName;
+
     @ManyToMany(mappedBy = "channels")
     private Set<User> users;
 }

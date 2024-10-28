@@ -5,7 +5,8 @@ CREATE TABLE category (
 
 CREATE TABLE channel (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(50) NOT NULL
+    name VARCHAR(50) NOT NULL,
+    display_name VARCHAR(50) NOT NULL
 );
 
 CREATE TABLE user (

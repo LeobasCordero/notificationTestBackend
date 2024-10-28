@@ -1,21 +1,25 @@
 package gila.challenge.notificationTest.service;
 
 import gila.challenge.notificationTest.dto.MessageDto;
-import gila.challenge.notificationTest.model.Message;
-import gila.challenge.notificationTest.model.User;
+import gila.challenge.notificationTest.dto.NotificationDto;
 import gila.challenge.notificationTest.model.Category;
 import gila.challenge.notificationTest.model.Channel;
+import gila.challenge.notificationTest.model.Message;
+import gila.challenge.notificationTest.model.User;
 import gila.challenge.notificationTest.repository.MessageRepository;
 import gila.challenge.notificationTest.utilities.mappers.MessageMapper;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
 public class MessageService {
+
+    private static final Logger logger = LoggerFactory.getLogger(MessageService.class);
 
     @Autowired
     private MessageRepository messageRepository;
@@ -27,18 +31,21 @@ public class MessageService {
     private CategoryService categoryService;
 
     public List<MessageDto> getAllMessages(){
+        logger.info("MessageService.getAllMessages starts");
         var messagesList = messageRepository.findAllMessagesOrderByDateDesc();
 
         return messagesList.stream().map(MessageMapper::messageToMessageDto).toList();
     }
 
-    public Message saveMessage(MessageDto messageDto) {
-        User user = userService.getUserById(messageDto.getUserId());
-        Category category = categoryService.getCategoryById(messageDto.getCategoryId());
-        Channel channel = channelService.getChannelById(messageDto.getChannelId());
+    public Message saveMessage(NotificationDto notificationDto) {
+        logger.info("MessageService.saveMessage starts");
+        User user = userService.getUserById(notificationDto.getUserId());
+        Category category = categoryService.getCategoryById(notificationDto.getCategoryId());
+        Channel channel = channelService.getChannelById(notificationDto.getChannelId());
+        var message = MessageMapper.NotificationDTOtoMessage(user, category, channel, notificationDto);
+        message.setSentAt(LocalDateTime.now());
 
-        var message = MessageMapper.MessageDTOtoMessage(user, category, channel, messageDto);
-
+        logger.info("MessageService.saveMessage: storing message for userID: {}", user.getUserId());
         return messageRepository.save(message);
     }
 }

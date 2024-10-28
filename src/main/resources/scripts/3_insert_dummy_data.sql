@@ -1,7 +1,8 @@
 -- Insert users
 INSERT INTO user (name, email, phone_number) VALUES
     ('Leo Cordero', 'lcordero@gila.com', '1234567890'),
-    ('Mary Martinez', 'mmartinez@gmail.com', '0987654321');
+    ('Mary Martinez', 'mmartinez@gmail.com', '0987654321'),
+    ('Benji', 'benji@gmail.com', '654321654');
 
 -- Insert subscribed categories
 INSERT INTO user_category (user_id, category_id) VALUES (1, 1);  -- Leo Cordero subscribed to sports
