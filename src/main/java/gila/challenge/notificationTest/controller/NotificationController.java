@@ -20,8 +20,8 @@ public class NotificationController implements NotificationApi {
 
 
     @Override
-    public boolean sendNotification(NotificationDto messageDto) {
+    public void sendNotification(NotificationDto messageDto) {
         logger.info("NotificationController.sendNotification starts");
-        return notificationService.send(messageDto);
+        notificationService.send(messageDto);
     }
 }

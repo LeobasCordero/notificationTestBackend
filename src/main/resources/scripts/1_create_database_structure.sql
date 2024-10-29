@@ -1,6 +1,7 @@
 CREATE TABLE category (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(50) NOT NULL
+    name VARCHAR(50) NOT NULL,
+    display_name VARCHAR(50) NOT NULL
 );
 
 CREATE TABLE channel (

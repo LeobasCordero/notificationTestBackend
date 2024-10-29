@@ -11,8 +11,7 @@ public class UserMapper {
         var userDto = new UserDto();
 
         userDto.setUserName(user.getUserName());
-        userDto.setEmail(user.getEmail());
-        userDto.setPhoneNumber(user.getPhoneNumber());
+        userDto.setUserId(user.getUserId());
 
         return userDto;
     }

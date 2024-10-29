@@ -22,6 +22,9 @@ public class Category {
     @Column(name = "name", length = 50, nullable = false)
     private String name;
 
+    @Column(name = "display_name", length = 50, nullable = false)
+    private String displayName;
+
     @ManyToMany(mappedBy = "categories")
     private Set<User> users;
 }

@@ -1,25 +1,26 @@
 package gila.challenge.notificationTest.api;
 
-import gila.challenge.notificationTest.dto.NotificationDto;
+import gila.challenge.notificationTest.dto.CategoryDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import java.util.List;
 
-public interface NotificationApi {
 
-    @Operation(summary = "Send a message", description = "Sends a message to the specific category, channel", tags = {"notification"})
+public interface CategoryApi {
+
+    @Operation(summary = "Fetch all categories", description = "Fetch all categories data from DB", tags = {"category"})
     @ApiResponses(value = {
             @ApiResponse(responseCode = HttpServletResponse.SC_INTERNAL_SERVER_ERROR + "", description = "Internal server error"),
-            @ApiResponse(responseCode = HttpServletResponse.SC_OK + "", description = "All messages were sent")
+            @ApiResponse(responseCode = HttpServletResponse.SC_OK + "", description = "All categories from database")
     }
     )
-    @PostMapping(path = "/send")
+    @GetMapping("/categories")
     @ResponseStatus(HttpStatus.OK)
-    void sendNotification(@RequestBody NotificationDto messageDto);
+    List<CategoryDto> getAllCategories();
 }

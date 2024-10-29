@@ -2,6 +2,8 @@ package gila.challenge.notificationTest.service;
 
 
 import gila.challenge.notificationTest.dto.NotificationDto;
+import gila.challenge.notificationTest.model.Channel;
+import gila.challenge.notificationTest.model.User;
 import gila.challenge.notificationTest.service.Interfaces.Notification;
 import gila.challenge.notificationTest.utilities.enums.ChannelType;
 import gila.challenge.notificationTest.utilities.factories.NotificationFactory;
@@ -22,21 +24,27 @@ public class NotificationService {
 
     private final NotificationFactory notificationFactory;
 
-    public boolean send(NotificationDto notificationDto){
+    private final UserService userService;
+
+    public void send(NotificationDto notificationDto){
         logger.info("NotificationService.send starts");
         NotificationValidations.validateNotificationToStore(notificationDto);
-        Notification notification = getNotificationService(notificationDto.getChannelName());
+        User user = userService.getUserById(notificationDto.getUserId());
+        user.getChannels().forEach(channel -> sendNotificationByChannel(channel, notificationDto));
+    }
+
+    private void sendNotificationByChannel(Channel channel, NotificationDto notificationDto) {
+        Notification notification = getNotificationService(channel.getName());
         if(!Objects.isNull(notification)){
-            return notification.sendNotification(notificationDto);
+            notification.sendNotification(notificationDto);
         }else{
             logger.error("NotificationService.send error: Channel not supported");
-            return Boolean.FALSE;
         }
     }
 
-    private Notification getNotificationService(String categoryName) {
+    private Notification getNotificationService(String channelName) {
         logger.info("NotificationService.getNotificationService starts");
-        return ChannelType.fromValue(categoryName)
+        return ChannelType.fromValue(channelName)
                 .getService(notificationFactory);
     }
 
