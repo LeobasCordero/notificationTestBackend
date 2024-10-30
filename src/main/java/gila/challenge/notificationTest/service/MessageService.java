@@ -13,7 +13,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 
 @Service
@@ -43,7 +45,7 @@ public class MessageService {
         Category category = categoryService.getCategoryById(notificationDto.getCategoryId());
         Channel channel = channelService.getChannelByName(channelName);
         var message = MessageMapper.NotificationDTOtoMessage(user, category, channel, notificationDto);
-        message.setSentAt(LocalDateTime.now());
+        message.setSentAt(LocalDateTime.ofInstant(Instant.now(), ZoneId.systemDefault()));
 
         logger.info("MessageService.saveMessage: storing message for userID: {}", user.getUserId());
         return messageRepository.save(message);
