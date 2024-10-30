@@ -1,6 +1,7 @@
 package gila.challenge.notificationTest.service;
 
 import gila.challenge.notificationTest.dto.UserDto;
+import gila.challenge.notificationTest.model.Category;
 import gila.challenge.notificationTest.model.User;
 import gila.challenge.notificationTest.repository.UserRepository;
 import gila.challenge.notificationTest.utilities.mappers.UserMapper;
@@ -31,5 +32,10 @@ public class UserService {
         logger.info("UserService.getUserById starts with id: {}", id);
         return userRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
+    }
+
+    public List<Category> getCategoriesByUserId(Integer userId) {
+        User user = getUserById(userId);
+        return user.getCategories();
     }
 }
