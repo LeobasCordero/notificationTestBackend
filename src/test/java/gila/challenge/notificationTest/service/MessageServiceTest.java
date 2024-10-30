@@ -110,7 +110,7 @@ class MessageServiceTest {
         when(messageRepository.save(any(Message.class))).thenReturn(message);
 
         // Act
-        Message result = messageService.saveMessage(notificationDto);
+        Message result = messageService.saveMessage(notificationDto, "SMS");
 
         // Assert
         assertThat(result).isNotNull();
@@ -127,7 +127,7 @@ class MessageServiceTest {
 
         // Act & Assert
         assertThrows(RuntimeException.class, () ->
-                messageService.saveMessage(notificationDto));
+                messageService.saveMessage(notificationDto, "SMS"));
         verify(messageRepository, never()).save(any(Message.class));
     }
 }

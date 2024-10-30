@@ -30,7 +30,7 @@ public class User {
     @Column(name = "phone_number", length = 20) //TODO: add pattern validation
     private String phoneNumber;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "user_category",
             joinColumns = @JoinColumn(name = "user_id"),
@@ -38,7 +38,7 @@ public class User {
     )
     private List<Category> categories;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "user_channel",
             joinColumns = @JoinColumn(name = "user_id"),

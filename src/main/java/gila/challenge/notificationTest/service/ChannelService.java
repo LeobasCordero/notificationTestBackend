@@ -25,4 +25,12 @@ public class ChannelService {
                     return new IllegalArgumentException("Channel not found");
                 });
     }
+
+    public Channel getChannelByName(String channelName){
+        return channelRepository.findByName(channelName)
+                .orElseThrow(() -> {
+                    logger.info("ChannelService.findByChannelName error: No channel found");
+                    return new IllegalArgumentException("Channel not found");
+                });
+    }
 }

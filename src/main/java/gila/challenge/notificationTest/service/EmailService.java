@@ -2,6 +2,7 @@ package gila.challenge.notificationTest.service;
 
 import gila.challenge.notificationTest.dto.NotificationDto;
 import gila.challenge.notificationTest.service.Interfaces.Notification;
+import gila.challenge.notificationTest.utilities.enums.ChannelType;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,9 +28,14 @@ public class EmailService implements Notification {
             return Boolean.FALSE;
         }finally {
             logger.info("EmailService.sendNotification notification status: {}", messageSent);
-            messageService.saveMessage(notificationDto);
+            logMessage(notificationDto, ChannelType.EMAIL.getValue());
         }
 
         return messageSent;
+    }
+
+    @Override
+    public void logMessage(NotificationDto message, String channel) {
+        messageService.saveMessage(message, channel);
     }
 }
