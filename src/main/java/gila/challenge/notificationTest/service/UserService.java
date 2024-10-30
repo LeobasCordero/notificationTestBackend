@@ -13,6 +13,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+import static gila.challenge.notificationTest.utilities.constants.ErrorConstants.USER_ERROR_MSG;
+
 @Service
 @RequiredArgsConstructor
 public class UserService {
@@ -31,7 +33,7 @@ public class UserService {
     public User getUserById(Integer id){
         logger.info("UserService.getUserById starts with id: {}", id);
         return userRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+                .orElseThrow(() -> new IllegalArgumentException(USER_ERROR_MSG));
     }
 
     public List<Category> getCategoriesByUserId(Integer userId) {

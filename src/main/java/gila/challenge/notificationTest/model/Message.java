@@ -31,6 +31,9 @@ public class Message {
     @Column(columnDefinition = "TEXT")
     private String content;
 
+    @Column(name = "status", columnDefinition = "ENUM('SENT', 'FAILED')")
+    private String status;
+
     @Column(name = "sent_at", columnDefinition = "TIMESTAMP")
     private LocalDateTime sentAt;
 

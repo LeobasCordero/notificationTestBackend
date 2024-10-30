@@ -39,6 +39,7 @@ CREATE TABLE message (
     category_id INT,
     channel_id INT,
     content TEXT,
+    status ENUM('SENT', 'FAILED'),
     sent_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES user(id),
     FOREIGN KEY (category_id) REFERENCES category(id),

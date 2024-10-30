@@ -8,6 +8,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import static gila.challenge.notificationTest.utilities.constants.ErrorConstants.CHANNEL_ERROR_MSG;
+
 @Service
 @RequiredArgsConstructor
 public class ChannelService {
@@ -30,7 +32,7 @@ public class ChannelService {
         return channelRepository.findByName(channelName)
                 .orElseThrow(() -> {
                     logger.info("ChannelService.findByChannelName error: No channel found");
-                    return new IllegalArgumentException("Channel not found");
+                    return new IllegalArgumentException(CHANNEL_ERROR_MSG);
                 });
     }
 }

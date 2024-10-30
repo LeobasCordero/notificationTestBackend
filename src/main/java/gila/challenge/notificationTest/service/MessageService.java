@@ -39,13 +39,14 @@ public class MessageService {
         return messagesList.stream().map(MessageMapper::messageToMessageDto).toList();
     }
 
-    public Message saveMessage(NotificationDto notificationDto, String channelName) {
+    public Message saveMessage(NotificationDto notificationDto, String channelName, String status) {
         logger.info("MessageService.saveMessage starts");
         User user = userService.getUserById(notificationDto.getUserId());
         Category category = categoryService.getCategoryById(notificationDto.getCategoryId());
         Channel channel = channelService.getChannelByName(channelName);
         var message = MessageMapper.NotificationDTOtoMessage(user, category, channel, notificationDto);
         message.setSentAt(LocalDateTime.ofInstant(Instant.now(), ZoneId.systemDefault()));
+        message.setStatus(status);
 
         logger.info("MessageService.saveMessage: storing message for userID: {}", user.getUserId());
         return messageRepository.save(message);

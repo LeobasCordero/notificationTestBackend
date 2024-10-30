@@ -31,7 +31,7 @@ public class MessageMapper {
 
         messageDto.setSentAt(message.getSentAt());
         messageDto.setContent(message.getContent());
-
+        messageDto.setStatus(message.getStatus());
 
         return messageDto;
     }

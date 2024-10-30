@@ -4,7 +4,7 @@ import gila.challenge.notificationTest.dto.NotificationDto;
 
 public interface Notification {
 
-    Boolean sendNotification(NotificationDto message);
+    void sendNotification(NotificationDto message);
 
-    void logMessage(NotificationDto message, String channel);
+    void logMessage(NotificationDto message, String channel, String status);
 }

@@ -31,30 +31,24 @@ class NotificationFactoryTest {
     @Test
     @DisplayName("Should return SMS service for SMS type")
     void shouldReturnSmsService() {
-        // Act
         Notification service = notificationFactory.getSmsService();
 
-        // Assert
         assertThat(service).isInstanceOf(SmsService.class);
     }
 
     @Test
     @DisplayName("Should return Email service for Email type")
     void shouldReturnEmailService() {
-        // Act
         Notification service = notificationFactory.getEmailService();
 
-        // Assert
         assertThat(service).isInstanceOf(EmailService.class);
     }
 
     @Test
     @DisplayName("Should return Push service for Push type")
     void shouldReturnPushService() {
-        // Act
         Notification service = notificationFactory.getPushNotificationService();
 
-        // Assert
         assertThat(service).isInstanceOf(PushNotificationService.class);
     }
 

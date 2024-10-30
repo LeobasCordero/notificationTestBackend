@@ -12,6 +12,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+import static gila.challenge.notificationTest.utilities.constants.ErrorConstants.CATEGORY_ERROR_MSG;
+
+
 @Service
 @RequiredArgsConstructor
 public class CategoryService {
@@ -29,7 +32,7 @@ public class CategoryService {
         return categoryRepository.findById(categoryId)
                 .orElseThrow(() -> {
                     logger.info("CategoryService.getChannelById error: No category found");
-                    return new IllegalArgumentException("Category not found");
+                    return new IllegalArgumentException(CATEGORY_ERROR_MSG);
                 });
     }
 

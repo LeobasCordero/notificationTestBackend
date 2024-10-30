@@ -17,6 +17,7 @@ public class NotificationDto {
     private String categoryName;
     private String channelName;
     private String content;
+    private String status;
     private LocalDateTime sentAt;
 
     private Integer userId;

@@ -17,5 +17,6 @@ public class MessageDto {
     private String categoryName;
     private String channelName;
     private String content;
+    private String status;
     private LocalDateTime sentAt;
 }

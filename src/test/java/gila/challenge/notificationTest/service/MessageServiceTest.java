@@ -88,13 +88,10 @@ class MessageServiceTest {
     @Test
     @DisplayName("Should get all messages")
     void shouldGetAllMessages() {
-        // Arrange
         when(messageRepository.findAllMessagesOrderByDateDesc()).thenReturn(messageList);
 
-        // Act
         List<MessageDto> result = messageService.getAllMessages();
 
-        // Assert
         assertThat(result).isNotEmpty();
         assertThat(result).hasSize(1);
         verify(messageRepository, times(1)).findAllMessagesOrderByDateDesc();
@@ -103,16 +100,14 @@ class MessageServiceTest {
     @Test
     @DisplayName("Should save message")
     void shouldSaveMessage() {
-        // Arrange
+
         when(userService.getUserById(anyInt())).thenReturn(user);
         when(categoryService.getCategoryById(anyInt())).thenReturn(category);
         when(channelService.getChannelById(anyInt())).thenReturn(channel);
         when(messageRepository.save(any(Message.class))).thenReturn(message);
 
-        // Act
-        Message result = messageService.saveMessage(notificationDto, "SMS");
+        Message result = messageService.saveMessage(notificationDto, "SMS", "SENT");
 
-        // Assert
         assertThat(result).isNotNull();
         assertThat(result.getId()).isEqualTo(1);
         verify(messageRepository, times(1)).save(any(Message.class));
@@ -121,13 +116,12 @@ class MessageServiceTest {
     @Test
     @DisplayName("Should throw exception when user not found")
     void shouldThrowExceptionWhenUserNotFound() {
-        // Arrange
+
         when(userService.getUserById(anyInt()))
                 .thenThrow(new RuntimeException("User not found"));
 
-        // Act & Assert
         assertThrows(RuntimeException.class, () ->
-                messageService.saveMessage(notificationDto, "SMS"));
+                messageService.saveMessage(notificationDto, "SMS", "FAILED"));
         verify(messageRepository, never()).save(any(Message.class));
     }
 }

@@ -20,14 +20,14 @@ INSERT INTO user_channel (user_id, channel_id) VALUES (3, 2);  -- Benji uses pus
 INSERT INTO user_channel (user_id, channel_id) VALUES (3, 3);  -- Benji uses sms
 
 -- Insert log of messages sent
-INSERT INTO message (user_id, category_id, channel_id, content, sent_at)
-VALUES (1, 1, 1, 'Sports update via Email', CURRENT_TIMESTAMP);
+INSERT INTO message (user_id, category_id, channel_id, content, status, sent_at)
+VALUES (1, 1, 1, 'Sports update via Email', 'SENT', CURRENT_TIMESTAMP);
 
-INSERT INTO message (user_id, category_id, channel_id, content, sent_at)
-VALUES (1, 2, 2, 'Finance alert via Push Notification', CURRENT_TIMESTAMP);
+INSERT INTO message (user_id, category_id, channel_id, content, status, sent_at)
+VALUES (1, 2, 2, 'Finance alert via Push Notification', 'SENT', CURRENT_TIMESTAMP);
 
-INSERT INTO message (user_id, category_id, channel_id, content, sent_at)
-VALUES (2, 3, 3, 'Movie release via SMS', CURRENT_TIMESTAMP);
+INSERT INTO message (user_id, category_id, channel_id, content, status, sent_at)
+VALUES (2, 3, 3, 'Movie release via SMS', 'SENT', CURRENT_TIMESTAMP);
 
 
 

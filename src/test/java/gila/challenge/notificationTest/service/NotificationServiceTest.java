@@ -13,7 +13,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -61,28 +60,22 @@ class NotificationServiceTest {
         @Test
         @DisplayName("Should successfully send SMS notification")
         void shouldSendSmsNotification() {
-            // Arrange
-            when(messageService.saveMessage(any(NotificationDto.class),anyString())).thenReturn(message);
+            when(messageService.saveMessage(any(NotificationDto.class),anyString(), anyString())).thenReturn(message);
 
-            // Act
-            Boolean result = smsService.sendNotification(notificationDto);
+            smsService.sendNotification(notificationDto);
 
-            // Assert
-            assertThat(result).isTrue();
-            verify(messageService, times(1)).saveMessage(notificationDto, "SMS");
+            verify(messageService, times(1)).saveMessage(notificationDto, "SMS", "SENT");
         }
 
         @Test
         @DisplayName("Should handle exception when saving SMS message fails")
         void shouldHandleExceptionWhenSavingSmsFails() {
-            // Arrange
-            when(messageService.saveMessage(any(NotificationDto.class), anyString()))
+            when(messageService.saveMessage(any(NotificationDto.class), anyString(), anyString()))
                     .thenThrow(new RuntimeException("Database error"));
 
-            // Act & Assert
             assertThrows(RuntimeException.class, () ->
                     smsService.sendNotification(notificationDto));
-            verify(messageService, times(1)).saveMessage(notificationDto, "SMS");
+            verify(messageService, times(1)).saveMessage(notificationDto, "SMS", "FAILED");
         }
     }
 
@@ -92,28 +85,22 @@ class NotificationServiceTest {
         @Test
         @DisplayName("Should successfully send email notification")
         void shouldSendEmailNotification() {
-            // Arrange
-            when(messageService.saveMessage(any(NotificationDto.class), anyString())).thenReturn(message);
+            when(messageService.saveMessage(any(NotificationDto.class), anyString(), anyString())).thenReturn(message);
 
-            // Act
-            Boolean result = emailService.sendNotification(notificationDto);
+            emailService.sendNotification(notificationDto);
 
-            // Assert
-            assertThat(result).isTrue();
-            verify(messageService, times(1)).saveMessage(notificationDto, "SMS");
+            verify(messageService, times(1)).saveMessage(notificationDto, "SMS", "SENT");
         }
 
         @Test
         @DisplayName("Should handle exception when saving email message fails")
         void shouldHandleExceptionWhenSavingEmailFails() {
-            // Arrange
-            when(messageService.saveMessage(any(NotificationDto.class), anyString()))
+            when(messageService.saveMessage(any(NotificationDto.class), anyString(), anyString()))
                     .thenThrow(new RuntimeException("Database error"));
 
-            // Act & Assert
             assertThrows(RuntimeException.class, () ->
                     emailService.sendNotification(notificationDto));
-            verify(messageService, times(1)).saveMessage(notificationDto, "SMS");
+            verify(messageService, times(1)).saveMessage(notificationDto, "SMS", "FAILED");
         }
     }
 
@@ -123,28 +110,22 @@ class NotificationServiceTest {
         @Test
         @DisplayName("Should successfully send push notification")
         void shouldSendPushNotification() {
-            // Arrange
-            when(messageService.saveMessage(any(NotificationDto.class), anyString())).thenReturn(message);
+            when(messageService.saveMessage(any(NotificationDto.class), anyString(), anyString())).thenReturn(message);
 
-            // Act
-            Boolean result = pushNotificationService.sendNotification(notificationDto);
+            pushNotificationService.sendNotification(notificationDto);
 
-            // Assert
-            assertThat(result).isTrue();
-            verify(messageService, times(1)).saveMessage(notificationDto, "SMS");
+            verify(messageService, times(1)).saveMessage(notificationDto, "SMS", "SENT");
         }
 
         @Test
         @DisplayName("Should handle exception when saving push notification fails")
         void shouldHandleExceptionWhenSavingPushFails() {
-            // Arrange
-            when(messageService.saveMessage(any(NotificationDto.class), anyString()))
+            when(messageService.saveMessage(any(NotificationDto.class), anyString(), anyString()))
                     .thenThrow(new RuntimeException("Database error"));
 
-            // Act & Assert
             assertThrows(RuntimeException.class, () ->
                     pushNotificationService.sendNotification(notificationDto));
-            verify(messageService, times(1)).saveMessage(notificationDto, "SMS");
+            verify(messageService, times(1)).saveMessage(notificationDto, "SMS", "FAILED");
         }
     }
 }
