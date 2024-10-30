@@ -45,3 +45,7 @@ CREATE TABLE message (
     FOREIGN KEY (category_id) REFERENCES category(id),
     FOREIGN KEY (channel_id) REFERENCES channel(id)
 );
+
+CREATE INDEX idx_message_user_id ON message(user_id);
+CREATE INDEX idx_message_category_id ON message(category_id);
+CREATE INDEX idx_message_channel_id ON message(channel_id);
