@@ -1,4 +1,4 @@
-package gila.challenge.notificationTest.utilities.factories;
+package gila.challenge.notificationTest.common.utilities.factories;
 
 import gila.challenge.notificationTest.service.EmailService;
 import gila.challenge.notificationTest.service.Interfaces.Notification;

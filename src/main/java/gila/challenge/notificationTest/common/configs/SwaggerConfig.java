@@ -1,4 +1,4 @@
-package gila.challenge.notificationTest.configs;
+package gila.challenge.notificationTest.common.configs;
 
 import io.swagger.v3.oas.models.ExternalDocumentation;
 import io.swagger.v3.oas.models.OpenAPI;

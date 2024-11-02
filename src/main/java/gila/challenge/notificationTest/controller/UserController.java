@@ -5,7 +5,7 @@ import gila.challenge.notificationTest.dto.CategoryDto;
 import gila.challenge.notificationTest.dto.UserDto;
 import gila.challenge.notificationTest.model.Category;
 import gila.challenge.notificationTest.service.UserService;
-import gila.challenge.notificationTest.utilities.mappers.CategoryMapper;
+import gila.challenge.notificationTest.common.utilities.mappers.CategoryMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

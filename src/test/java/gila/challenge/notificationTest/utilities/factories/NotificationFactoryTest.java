@@ -1,5 +1,6 @@
 package gila.challenge.notificationTest.utilities.factories;
 
+import gila.challenge.notificationTest.common.utilities.factories.NotificationFactory;
 import gila.challenge.notificationTest.service.EmailService;
 import gila.challenge.notificationTest.service.Interfaces.Notification;
 import gila.challenge.notificationTest.service.PushNotificationService;

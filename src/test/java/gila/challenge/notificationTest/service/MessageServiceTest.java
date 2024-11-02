@@ -103,7 +103,7 @@ class MessageServiceTest {
 
         when(userService.getUserById(anyInt())).thenReturn(user);
         when(categoryService.getCategoryById(anyInt())).thenReturn(category);
-        when(channelService.getChannelById(anyInt())).thenReturn(channel);
+        when(channelService.getChannel(anyInt())).thenReturn(channel);
         when(messageRepository.save(any(Message.class))).thenReturn(message);
 
         Message result = messageService.saveMessage(notificationDto, "SMS", "SENT");

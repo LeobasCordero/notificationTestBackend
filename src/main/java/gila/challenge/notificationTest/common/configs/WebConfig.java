@@ -1,4 +1,4 @@
-package gila.challenge.notificationTest.configs;
+package gila.challenge.notificationTest.common.configs;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;

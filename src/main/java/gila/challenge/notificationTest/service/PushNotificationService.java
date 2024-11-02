@@ -1,14 +1,16 @@
 package gila.challenge.notificationTest.service;
 
+import gila.challenge.notificationTest.common.utilities.enums.ChannelType;
+import gila.challenge.notificationTest.common.utilities.utilities.Utils;
 import gila.challenge.notificationTest.dto.NotificationDto;
 import gila.challenge.notificationTest.service.Interfaces.Notification;
-import gila.challenge.notificationTest.utilities.enums.ChannelType;
-import gila.challenge.notificationTest.utilities.enums.NotificationStatus;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+
+import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 @Service
 @RequiredArgsConstructor
@@ -19,8 +21,7 @@ public class PushNotificationService implements Notification {
     private final MessageService messageService;
 
     @Override
-    @Async
-    public void sendNotification(NotificationDto notificationDto) {
+    public CompletableFuture<Map<String, Object>> sendNotification(NotificationDto notificationDto) {
         logger.info("PushNotificationService.sendNotification starts");
         boolean messageSent = Boolean.TRUE;
 
@@ -32,14 +33,11 @@ public class PushNotificationService implements Notification {
             logger.info("PushNotificationService.sendNotification error: {}", e.getMessage());
         }finally {
             logger.info("PushNotificationService.sendNotification status: {}", messageSent);
-            var status = messageSent ? NotificationStatus.SENT.name() : NotificationStatus.FAILED.name();
-            logMessage(notificationDto, ChannelType.PUSH_NOTIFICATION.getValue(), status);
         }
 
+        var result = Utils.createResultNotification(ChannelType.PUSH_NOTIFICATION.name(), notificationDto, messageSent);
+
+        return CompletableFuture.completedFuture(result);
     }
 
-    @Override
-    public void logMessage(NotificationDto message, String channel, String status) {
-        messageService.saveMessage(message, channel, status);
-    }
 }

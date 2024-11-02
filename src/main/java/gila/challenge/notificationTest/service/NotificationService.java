@@ -5,9 +5,9 @@ import gila.challenge.notificationTest.dto.NotificationDto;
 import gila.challenge.notificationTest.model.Channel;
 import gila.challenge.notificationTest.model.User;
 import gila.challenge.notificationTest.service.Interfaces.Notification;
-import gila.challenge.notificationTest.utilities.enums.ChannelType;
-import gila.challenge.notificationTest.utilities.factories.NotificationFactory;
-import gila.challenge.notificationTest.utilities.validators.NotificationValidations;
+import gila.challenge.notificationTest.common.utilities.enums.ChannelType;
+import gila.challenge.notificationTest.common.utilities.factories.NotificationFactory;
+import gila.challenge.notificationTest.common.utilities.validators.NotificationValidations;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,7 +20,7 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class NotificationService {
 
-    private static final Logger logger = LoggerFactory.getLogger(MessageService.class);
+    private static final Logger logger = LoggerFactory.getLogger(NotificationService.class);
 
     private final NotificationFactory notificationFactory;
 
@@ -30,12 +30,14 @@ public class NotificationService {
         logger.info("NotificationService.send starts");
         NotificationValidations.validateNotificationToStore(notificationDto);
         User user = userService.getUserById(notificationDto.getUserId());
-        user.getChannels().forEach(channel -> sendNotificationByChannel(channel, notificationDto));
+        if(Objects.nonNull(user.getChannels())) {
+            user.getChannels().forEach(channel -> sendNotificationByChannel(channel, notificationDto));
+        }
     }
 
     private void sendNotificationByChannel(Channel channel, NotificationDto notificationDto) {
         Notification notification = getNotificationService(channel.getName());
-        if(!Objects.isNull(notification)){
+        if(Objects.nonNull(notification)){
             notification.sendNotification(notificationDto);
         }else{
             logger.error("NotificationService.send error: Channel not supported");
@@ -43,9 +45,8 @@ public class NotificationService {
     }
 
     private Notification getNotificationService(String channelName) {
-        logger.info("NotificationService.getNotificationService starts");
-        return ChannelType.fromValue(channelName)
-                .getService(notificationFactory);
+        logger.info("NotificationService.getNotificationService starts for channelName: {}", channelName);
+        return ChannelType.fromValue(channelName).getService(notificationFactory);
     }
 
 

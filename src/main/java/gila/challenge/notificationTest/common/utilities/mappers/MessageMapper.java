@@ -1,4 +1,4 @@
-package gila.challenge.notificationTest.utilities.mappers;
+package gila.challenge.notificationTest.common.utilities.mappers;
 
 
 import gila.challenge.notificationTest.dto.MessageDto;

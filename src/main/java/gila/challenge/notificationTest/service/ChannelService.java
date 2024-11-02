@@ -8,7 +8,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import static gila.challenge.notificationTest.utilities.constants.ErrorConstants.CHANNEL_ERROR_MSG;
+import java.util.Optional;
+
+import static gila.challenge.notificationTest.common.utilities.constants.ErrorConstants.CHANNEL_ERROR_MSG;
 
 @Service
 @RequiredArgsConstructor
@@ -19,20 +21,27 @@ public class ChannelService {
     @Autowired
     private ChannelRepository channelRepository;
 
-    public Channel getChannelById(Integer channelId){
-        logger.info("ChannelService.getChannelById starts");
-        return channelRepository.findById(channelId)
-                .orElseThrow(() -> {
-                    logger.info("ChannelService.getChannelById error: No channel found");
-                    return new IllegalArgumentException("Channel not found");
-                });
+    public Channel getChannel(Integer channelId){
+        logger.info("ChannelService.getChannel by id starts");
+        Optional<Channel> channel;
+        try{
+            channel = channelRepository.findById(channelId);
+        } catch (Exception e) {
+            logger.info("ChannelService.getChannel error: No channel found for ID: {}", channelId);
+            throw new RuntimeException(CHANNEL_ERROR_MSG, e);
+        }
+        return channel.orElseGet(Channel::new);
     }
 
-    public Channel getChannelByName(String channelName){
-        return channelRepository.findByName(channelName)
-                .orElseThrow(() -> {
-                    logger.info("ChannelService.findByChannelName error: No channel found");
-                    return new IllegalArgumentException(CHANNEL_ERROR_MSG);
-                });
+    public Channel getChannel(String channelName){
+        logger.info("ChannelService.getChannel by name starts");
+        Optional<Channel> channel;
+        try{
+            channel = channelRepository.findByName(channelName);
+        } catch (Exception e) {
+            logger.info("ChannelService.findByChannelName error: No channel found for ChannelName: {}", channelName);
+            throw new RuntimeException(e);
+        }
+        return channel.orElseGet(Channel::new);
     }
 }

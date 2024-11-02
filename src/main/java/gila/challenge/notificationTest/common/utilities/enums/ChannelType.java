@@ -1,7 +1,7 @@
-package gila.challenge.notificationTest.utilities.enums;
+package gila.challenge.notificationTest.common.utilities.enums;
 
 import gila.challenge.notificationTest.service.Interfaces.Notification;
-import gila.challenge.notificationTest.utilities.factories.NotificationFactory;
+import gila.challenge.notificationTest.common.utilities.factories.NotificationFactory;
 
 import java.util.Arrays;
 import java.util.function.Function;

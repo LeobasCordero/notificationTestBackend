@@ -3,7 +3,7 @@ package gila.challenge.notificationTest.service;
 import gila.challenge.notificationTest.dto.CategoryDto;
 import gila.challenge.notificationTest.model.Category;
 import gila.challenge.notificationTest.repository.CategoryRepository;
-import gila.challenge.notificationTest.utilities.mappers.CategoryMapper;
+import gila.challenge.notificationTest.common.utilities.mappers.CategoryMapper;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,8 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
-import static gila.challenge.notificationTest.utilities.constants.ErrorConstants.CATEGORY_ERROR_MSG;
+import static gila.challenge.notificationTest.common.utilities.constants.ErrorConstants.CATEGORY_ERROR_MSG;
 
 
 @Service
@@ -29,11 +30,15 @@ public class CategoryService {
 
     public Category getCategoryById(Integer categoryId){
         logger.info("CategoryService.getCategoryById starts");
-        return categoryRepository.findById(categoryId)
-                .orElseThrow(() -> {
-                    logger.info("CategoryService.getChannelById error: No category found");
-                    return new IllegalArgumentException(CATEGORY_ERROR_MSG);
-                });
+        Optional<Category> category;
+        try{
+            category = categoryRepository.findById(categoryId);
+        }catch(Exception e){
+            logger.info("CategoryService.getChannelById error: No category found for ID: {}", categoryId);
+            throw new RuntimeException(CATEGORY_ERROR_MSG, e);
+        }
+
+        return category.orElseGet(Category::new);
     }
 
     public List<CategoryDto> getAllCategories(){
