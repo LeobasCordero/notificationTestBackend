@@ -68,8 +68,6 @@ public class MessageService {
                     notificationDto.getUserId(), e.getMessage(), e);
             throw new RuntimeException(SAVE_SAVE_MESSAGE_ERROR, e);
         }
-
-
     }
 
 }

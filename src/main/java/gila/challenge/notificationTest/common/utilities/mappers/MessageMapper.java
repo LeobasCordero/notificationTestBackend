@@ -9,6 +9,7 @@ import gila.challenge.notificationTest.model.Message;
 import gila.challenge.notificationTest.model.User;
 import org.springframework.stereotype.Component;
 
+import java.util.Objects;
 import java.util.Optional;
 
 @Component
@@ -17,22 +18,23 @@ public class MessageMapper {
     public static MessageDto messageToMessageDto(Message message){
         var messageDto = new MessageDto();
 
-        messageDto.setUserName(Optional.ofNullable(message.getUser())
-                .map(User::getUserName)
-                .orElse(null));
+        if(Objects.nonNull(message)) {
+            messageDto.setUserName(Optional.ofNullable(message.getUser())
+                    .map(User::getUserName)
+                    .orElse(null));
 
-        messageDto.setCategoryName(Optional.ofNullable(message.getCategory())
-                .map(Category::getName)
-                        .orElse(null));
+            messageDto.setCategoryName(Optional.ofNullable(message.getCategory())
+                    .map(Category::getName)
+                    .orElse(null));
 
-        messageDto.setChannelName(Optional.ofNullable(message.getChannel())
-                .map(Channel::getDisplayName)
-                .orElse(null));
+            messageDto.setChannelName(Optional.ofNullable(message.getChannel())
+                    .map(Channel::getDisplayName)
+                    .orElse(null));
 
-        messageDto.setSentAt(message.getSentAt());
-        messageDto.setContent(message.getContent());
-        messageDto.setStatus(message.getStatus());
-
+            messageDto.setSentAt(message.getSentAt());
+            messageDto.setContent(message.getContent());
+            messageDto.setStatus(message.getStatus());
+        }
         return messageDto;
     }
 

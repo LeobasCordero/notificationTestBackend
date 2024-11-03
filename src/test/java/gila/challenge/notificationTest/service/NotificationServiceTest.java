@@ -1,131 +1,95 @@
 package gila.challenge.notificationTest.service;
 
+import gila.challenge.notificationTest.common.utilities.factories.NotificationFactory;
 import gila.challenge.notificationTest.dto.NotificationDto;
-import gila.challenge.notificationTest.model.Message;
+import gila.challenge.notificationTest.model.Channel;
+import gila.challenge.notificationTest.model.User;
+import gila.challenge.notificationTest.service.Interfaces.Notification;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.MockitoAnnotations;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
-@ExtendWith(MockitoExtension.class)
 class NotificationServiceTest {
 
     @Mock
-    private MessageService messageService;
+    private NotificationFactory notificationFactory;
+
+    @Mock
+    private UserService userService;
+
+    @Mock
+    private Notification notification;
 
     @InjectMocks
-    private SmsService smsService;
-
-    @InjectMocks
-    private EmailService emailService;
-
-    @InjectMocks
-    private PushNotificationService pushNotificationService;
-
-    private NotificationDto notificationDto;
-    private Message message;
+    private NotificationService notificationService;
 
     @BeforeEach
     void setUp() {
-        notificationDto = NotificationDto.builder()
-                .userId(1)
-                .categoryId(1)
-                .channelId(1)
-                .content("Test message")
-                .build();
+        MockitoAnnotations.openMocks(this);
+    }
 
-        message = Message.builder()
-                .id(1)
-                .userId(1)
-                .categoryId(1)
-                .channelId(1)
-                .content("Test message")
+    @Test
+    void testSendNotification_Success() {
+        NotificationDto notificationDto = NotificationDto.builder()
+                .userName("John Doe")
+                .categoryName("MOVIES")
+                .channelName("PUSH_NOTIFICATION")
+                .content("This is a test notification")
+                .status("SENT")
                 .sentAt(LocalDateTime.now())
+                .userId(1)
+                .categoryId(2)
+                .channelId(3)
                 .build();
+
+        Channel channel = new Channel();
+        channel.setName("PUSH_NOTIFICATION");
+
+        User user = new User();
+        user.setChannels(List.of(channel));
+
+        when(userService.getUserById(notificationDto.getUserId())).thenReturn(user);
+        when(notificationFactory.getPushNotificationService()).thenReturn(notification);
+
+        notificationService.send(notificationDto);
+
+        verify(userService, times(1)).getUserById(notificationDto.getUserId());
+        verify(notificationFactory, times(1)).getPushNotificationService();
+        verify(notification, times(1)).sendNotification(notificationDto);
     }
 
-    @Nested
-    @DisplayName("SMS Service Tests")
-    class SmsServiceTests {
-        @Test
-        @DisplayName("Should successfully send SMS notification")
-        void shouldSendSmsNotification() {
-            when(messageService.saveMessage(any(NotificationDto.class),anyString(), anyString())).thenReturn(message);
+    @Test
+    void testSendNotification_ChannelNotSupported() {
+        NotificationDto notificationDto = NotificationDto.builder()
+                .userName("John Doe")
+                .categoryName("MOVIES")
+                .channelName("UNSUPPORTED_CHANNEL")
+                .content("This is a test notification")
+                .status("SENT")
+                .sentAt(LocalDateTime.now())
+                .userId(1)
+                .categoryId(2)
+                .channelId(3)
+                .build();
 
-            smsService.sendNotification(notificationDto);
+        Channel channel = new Channel();
+        channel.setName("UNSUPPORTED_CHANNEL");
 
-            verify(messageService, times(1)).saveMessage(notificationDto, "SMS", "SENT");
-        }
+        User user = new User();
+        user.setChannels(List.of(channel));
 
-        @Test
-        @DisplayName("Should handle exception when saving SMS message fails")
-        void shouldHandleExceptionWhenSavingSmsFails() {
-            when(messageService.saveMessage(any(NotificationDto.class), anyString(), anyString()))
-                    .thenThrow(new RuntimeException("Database error"));
+        when(userService.getUserById(notificationDto.getUserId())).thenReturn(user);
+        when(notificationFactory.getPushNotificationService()).thenReturn(null);
 
-            assertThrows(RuntimeException.class, () ->
-                    smsService.sendNotification(notificationDto));
-            verify(messageService, times(1)).saveMessage(notificationDto, "SMS", "FAILED");
-        }
-    }
+        notificationService.send(notificationDto);
 
-    @Nested
-    @DisplayName("Email Service Tests")
-    class EmailServiceTests {
-        @Test
-        @DisplayName("Should successfully send email notification")
-        void shouldSendEmailNotification() {
-            when(messageService.saveMessage(any(NotificationDto.class), anyString(), anyString())).thenReturn(message);
-
-            emailService.sendNotification(notificationDto);
-
-            verify(messageService, times(1)).saveMessage(notificationDto, "SMS", "SENT");
-        }
-
-        @Test
-        @DisplayName("Should handle exception when saving email message fails")
-        void shouldHandleExceptionWhenSavingEmailFails() {
-            when(messageService.saveMessage(any(NotificationDto.class), anyString(), anyString()))
-                    .thenThrow(new RuntimeException("Database error"));
-
-            assertThrows(RuntimeException.class, () ->
-                    emailService.sendNotification(notificationDto));
-            verify(messageService, times(1)).saveMessage(notificationDto, "SMS", "FAILED");
-        }
-    }
-
-    @Nested
-    @DisplayName("Push Notification Service Tests")
-    class PushNotificationServiceTests {
-        @Test
-        @DisplayName("Should successfully send push notification")
-        void shouldSendPushNotification() {
-            when(messageService.saveMessage(any(NotificationDto.class), anyString(), anyString())).thenReturn(message);
-
-            pushNotificationService.sendNotification(notificationDto);
-
-            verify(messageService, times(1)).saveMessage(notificationDto, "SMS", "SENT");
-        }
-
-        @Test
-        @DisplayName("Should handle exception when saving push notification fails")
-        void shouldHandleExceptionWhenSavingPushFails() {
-            when(messageService.saveMessage(any(NotificationDto.class), anyString(), anyString()))
-                    .thenThrow(new RuntimeException("Database error"));
-
-            assertThrows(RuntimeException.class, () ->
-                    pushNotificationService.sendNotification(notificationDto));
-            verify(messageService, times(1)).saveMessage(notificationDto, "SMS", "FAILED");
-        }
+        verify(userService, times(1)).getUserById(notificationDto.getUserId());
     }
 }

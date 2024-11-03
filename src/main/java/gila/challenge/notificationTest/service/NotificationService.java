@@ -46,8 +46,8 @@ public class NotificationService {
 
     private Notification getNotificationService(String channelName) {
         logger.info("NotificationService.getNotificationService starts for channelName: {}", channelName);
-        return ChannelType.fromValue(channelName).getService(notificationFactory);
+        ChannelType channelType = ChannelType.fromValue(channelName);
+        return channelType != null ? channelType.getService(notificationFactory) : null;
     }
-
 
 }

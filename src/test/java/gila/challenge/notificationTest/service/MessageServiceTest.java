@@ -8,22 +8,18 @@ import gila.challenge.notificationTest.model.Message;
 import gila.challenge.notificationTest.model.User;
 import gila.challenge.notificationTest.repository.MessageRepository;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.MockitoAnnotations;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-@ExtendWith(MockitoExtension.class)
 class MessageServiceTest {
 
     @Mock
@@ -33,95 +29,96 @@ class MessageServiceTest {
     private UserService userService;
 
     @Mock
-    private CategoryService categoryService;
+    private ChannelService channelService;
 
     @Mock
-    private ChannelService channelService;
+    private CategoryService categoryService;
 
     @InjectMocks
     private MessageService messageService;
 
-    private NotificationDto notificationDto;
-    private User user;
-    private Category category;
-    private Channel channel;
-    private Message message;
-    private List<Message> messageList;
-
     @BeforeEach
     void setUp() {
-        notificationDto = NotificationDto.builder()
-                .userId(1)
-                .categoryId(1)
-                .channelId(1)
-                .content("Test message")
-                .build();
-
-        user = User.builder()
-                .userId(1)
-                .userName("Test User")
-                .email("test@test.com")
-                .build();
-
-        category = Category.builder()
-                .id(1)
-                .name("Test Category")
-                .build();
-
-        channel = Channel.builder()
-                .id(1)
-                .name("Test Channel")
-                .build();
-
-        message = Message.builder()
-                .id(1)
-                .userId(1)
-                .categoryId(1)
-                .channelId(1)
-                .content("Test message")
-                .sentAt(LocalDateTime.now())
-                .build();
-
-        messageList = Arrays.asList(message);
+        MockitoAnnotations.openMocks(this);
     }
 
     @Test
-    @DisplayName("Should get all messages")
-    void shouldGetAllMessages() {
-        when(messageRepository.findAllMessagesOrderByDateDesc()).thenReturn(messageList);
+    void testGetAllMessages() {
+        List<Message> mockMessages = Arrays.asList(
+                Message.builder().id(1).content("Message 1").sentAt(LocalDateTime.now()).build(),
+                Message.builder().id(2).content("Message 2").sentAt(LocalDateTime.now()).build()
+        );
+
+        when(messageRepository.findAllMessagesOrderByDateDesc()).thenReturn(mockMessages);
 
         List<MessageDto> result = messageService.getAllMessages();
 
-        assertThat(result).isNotEmpty();
-        assertThat(result).hasSize(1);
+        assertNotNull(result);
+        assertEquals(2, result.size());
         verify(messageRepository, times(1)).findAllMessagesOrderByDateDesc();
     }
 
     @Test
-    @DisplayName("Should save message")
-    void shouldSaveMessage() {
+    void testSaveMessage_Success() {
+        NotificationDto notificationDto = NotificationDto.builder()
+                .userId(1)
+                .categoryId(2)
+                .channelName("SMS")
+                .content("This is a test notification")
+                .status("SENT")
+                .sentAt(LocalDateTime.now())
+                .build();
 
-        when(userService.getUserById(anyInt())).thenReturn(user);
-        when(categoryService.getCategoryById(anyInt())).thenReturn(category);
-        when(channelService.getChannel(anyInt())).thenReturn(channel);
+        User user = User.builder().userId(1).build();
+        Category category = Category.builder().id(2).build();
+        Channel channel = Channel.builder().id(3).name("SMS").build();
+
+        Message message = Message.builder()
+                .userId(user.getUserId())
+                .categoryId(category.getId())
+                .channelId(channel.getId())
+                .content(notificationDto.getContent())
+                .status("SENT")
+                .sentAt(LocalDateTime.now())
+                .user(user)
+                .category(category)
+                .channel(channel)
+                .build();
+
+        when(userService.getUserById(notificationDto.getUserId())).thenReturn(user);
+        when(categoryService.getCategoryById(notificationDto.getCategoryId())).thenReturn(category);
+        when(channelService.getChannel(notificationDto.getChannelName())).thenReturn(channel);
         when(messageRepository.save(any(Message.class))).thenReturn(message);
 
         Message result = messageService.saveMessage(notificationDto, "SMS", "SENT");
 
-        assertThat(result).isNotNull();
-        assertThat(result.getId()).isEqualTo(1);
+        assertNotNull(result);
+        verify(userService, times(1)).getUserById(notificationDto.getUserId());
+        verify(categoryService, times(1)).getCategoryById(notificationDto.getCategoryId());
+        verify(channelService, times(1)).getChannel(notificationDto.getChannelName());
         verify(messageRepository, times(1)).save(any(Message.class));
     }
 
     @Test
-    @DisplayName("Should throw exception when user not found")
-    void shouldThrowExceptionWhenUserNotFound() {
+    void testSaveMessage_Error() {
+        NotificationDto notificationDto = NotificationDto.builder()
+                .userId(1)
+                .categoryId(2)
+                .channelName("SMS")
+                .content("This is a test notification")
+                .status("FAILED")
+                .sentAt(LocalDateTime.now())
+                .build();
 
-        when(userService.getUserById(anyInt()))
-                .thenThrow(new RuntimeException("User not found"));
+        when(userService.getUserById(notificationDto.getUserId())).thenThrow(new RuntimeException("User not found"));
 
-        assertThrows(RuntimeException.class, () ->
-                messageService.saveMessage(notificationDto, "SMS", "FAILED"));
+        assertThrows(RuntimeException.class, () -> {
+            messageService.saveMessage(notificationDto, "SMS", "FAILED");
+        });
+
+        verify(userService, times(1)).getUserById(notificationDto.getUserId());
+        verify(categoryService, never()).getCategoryById(notificationDto.getCategoryId());
+        verify(channelService, never()).getChannel(notificationDto.getChannelName());
         verify(messageRepository, never()).save(any(Message.class));
     }
 }

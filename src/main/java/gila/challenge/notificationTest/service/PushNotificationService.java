@@ -1,7 +1,7 @@
 package gila.challenge.notificationTest.service;
 
+import gila.challenge.notificationTest.common.utilities.builders.Builders;
 import gila.challenge.notificationTest.common.utilities.enums.ChannelType;
-import gila.challenge.notificationTest.common.utilities.utilities.Utils;
 import gila.challenge.notificationTest.dto.NotificationDto;
 import gila.challenge.notificationTest.service.Interfaces.Notification;
 import lombok.RequiredArgsConstructor;
@@ -18,24 +18,12 @@ public class PushNotificationService implements Notification {
 
     private static final Logger logger = LoggerFactory.getLogger(PushNotificationService.class);
 
-    private final MessageService messageService;
-
     @Override
     public CompletableFuture<Map<String, Object>> sendNotification(NotificationDto notificationDto) {
         logger.info("PushNotificationService.sendNotification starts");
-        boolean messageSent = Boolean.TRUE;
-
-        try{
-            logger.info("PushNotificationService.sendNotification: sending notification by channel Push Notification");
-            messageSent = Math.random() > 0.5;
-        }catch (Exception e){
-            messageSent = Boolean.FALSE;
-            logger.info("PushNotificationService.sendNotification error: {}", e.getMessage());
-        }finally {
-            logger.info("PushNotificationService.sendNotification status: {}", messageSent);
-        }
-
-        var result = Utils.createResultNotification(ChannelType.PUSH_NOTIFICATION.name(), notificationDto, messageSent);
+        var messageSent = Math.random() > 0.5;
+        logger.info("PushNotificationService.sendNotification sent notification {}", messageSent);
+        var result = Builders.createResultNotification(ChannelType.PUSH_NOTIFICATION.name(), notificationDto, messageSent);
 
         return CompletableFuture.completedFuture(result);
     }
